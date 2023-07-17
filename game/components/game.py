@@ -1,6 +1,6 @@
 import pygame
 
-from game.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE
+from game.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE, BG_IMAGE
 from game.components.spaceship import Spaceship
 from game.components.enemies.enemy_handler import EnemyHandler
 from game.components.enemies.white_handler import WhiteHandler
@@ -44,6 +44,7 @@ class Game:
     def draw(self):
         self.clock.tick(FPS)
         self.screen.fill((255, 255, 255))
+        self.back_image()
         self.draw_background()
         self.player.draw(self.screen)
         self.white_handler.draw(self.screen)
@@ -60,3 +61,33 @@ class Game:
             self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg - image_height))
             self.y_pos_bg = 0
         self.y_pos_bg += self.game_speed
+
+  
+    def back_image(self):                 
+        image = pygame.transform.scale(BG_IMAGE, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        image_width = image.get_width()
+        image_height = image.get_height()
+
+        x_pos_image = 0  # Ajusta la posición X deseada
+        y_pos_image = 0  # Ajusta la posición Y deseada
+
+        scale = 1.0
+        scale_factor = 0.01
+        running = True
+        while running:
+            #self.screen.fill((255, 255, 255))  # Limpia la pantalla en cada iteración
+            scaled_image = pygame.transform.scale(image, (int(image_width * scale), int(image_height * scale)))
+            image_rect = scaled_image.get_rect(center=(x_pos_image, y_pos_image))
+            self.screen.blit(scaled_image, image_rect)
+            break
+            scale += scale_factor
+            if scale >= 2.0 or scale <= 0.5:
+                scale_factor *= -1
+
+            pygame.display.update()
+            pygame.display.flip()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+            break

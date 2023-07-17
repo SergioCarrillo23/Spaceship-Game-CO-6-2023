@@ -15,6 +15,8 @@ SHIELD = pygame.image.load(os.path.join(IMG_DIR, 'Other/shield.png'))
 
 BG = pygame.image.load(os.path.join(IMG_DIR, 'Other/Track.png'))
 
+BG_IMAGE = pygame.image.load(os.path.join(IMG_DIR, 'Other/jupiter.png'))
+
 HEART = pygame.image.load(os.path.join(IMG_DIR, 'Other/SmallHeart.png'))
 
 DEFAULT_TYPE = "default"
@@ -32,3 +34,4 @@ FONT_STYLE = 'freesansbold.ttf'
 
 LEFT = 'left'
 RIGHT = 'right'
+
