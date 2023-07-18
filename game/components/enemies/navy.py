@@ -1,9 +1,9 @@
 import pygame
-from game.components.enemies.enemi_white import EnemyW 
+from game.components.enemies.enemi import Enemy
 from game.utils.constants import ENEMY_2
 
 
-class Navy(EnemyW):
+class Navy(Enemy):
     WIDTH = 40
     HEIGHT = 60
     #SPEED_X = 15
