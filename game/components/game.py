@@ -1,6 +1,7 @@
 import pygame
+import pickle
 
-from game.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE, WHITE
+from game.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, WHITE, BG_IMAGE, BG_IMAGE2
 from game.components.spaceship import Spaceship
 from game.components.enemies.enemy_handler import EnemyHandler
 from game.components.bullets.bullet_handler import BulletHandler
@@ -23,6 +24,7 @@ class Game:
         self.bullet_hundler = BulletHandler()
         self.score = 0
         self.number_deaths = 0
+        self.high_score = self.load_high_score() # Cargar el puntaje más alto almacenado
 
     def run(self):
         # Game loop: events - update - draw
@@ -53,19 +55,45 @@ class Game:
                 pygame.time.delay(300)
                 self.playing = False
                 self.number_deaths += 1
+                self.update_high_score()  # Actualizar el puntaje más alto almacenado
 
     def draw(self):
         self.draw_background()
         if self.playing:
+            self.draw_planet()
+            self.draw_satur()
             self.clock.tick(FPS)
             self.player.draw(self.screen)
             self.enemy_handler.draw(self.screen)
             self.bullet_hundler.draw(self.screen)
             self.draw_score()
         else:
+            self.draw_title()
             self.draw_menu()
+            if not self.playing:  # Agregar condición para mostrar el high score solo cuando el juego haya terminado
+                self.draw_high_score()
         pygame.display.update()
         pygame.display.flip()
+    
+    def draw_satur(self):
+        image = pygame.transform.scale(BG_IMAGE2, (SCREEN_WIDTH - 700, SCREEN_HEIGHT - 300))
+        image_height = image.get_height()
+        self.screen.blit(image, (self.x_pos_bg+700, self.y_pos_bg - image_height))
+        if self.y_pos_bg >= SCREEN_HEIGHT:
+            self.y_pos_bg = 0
+        elif self.y_pos_bg < 0:
+            self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg + image_height))
+            self.y_pos_bg += self.game_speed
+
+    def draw_planet(self):
+        image = pygame.transform.scale(BG_IMAGE, (SCREEN_WIDTH - 700, SCREEN_HEIGHT- 300))
+        image_height = image.get_height()
+        self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg - image_height))
+        if self.y_pos_bg >= SCREEN_HEIGHT:
+            self.y_pos_bg = 0
+        elif self.y_pos_bg < 0:
+            self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg + image_height))
+            self.y_pos_bg += self.game_speed 
 
     def draw_background(self):
         image = pygame.transform.scale(BG, (SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -77,9 +105,26 @@ class Game:
             self.y_pos_bg = 0
         self.y_pos_bg += self.game_speed
 
+    def draw_title(self):
+        if self.number_deaths == 0:
+            text, text_rect = text_utils.get_message("GALAXIA GAME ", 50, WHITE, SCREEN_WIDTH // 2, 50)
+            self.screen.blit(text, text_rect)
+            
+            line1 = "Instruction: "
+            line1_text, line1_rect = text_utils.get_message(line1, 25, WHITE, 100, 180)
+            self.screen.blit(line1_text, line1_rect)
+
+            line2 = "The movement the ship is by pressing the Keys: ARROWS"
+            line2_text, line2_rect = text_utils.get_message(line2, 20, WHITE, 310, 230)
+            self.screen.blit(line2_text, line2_rect)
+
+            line3 = "To shoot is whit key: SPACE"
+            line3_text, line3_rect = text_utils.get_message(line3, 20, WHITE, 161, 280)
+            self.screen.blit(line3_text, line3_rect)
+        
     def draw_menu(self):
         if self.number_deaths == 0:
-            text, text_rect = text_utils.get_message("Press any Key to start", 30, WHITE)
+            text, text_rect = text_utils.get_message("Press any Key to start", 30, WHITE, SCREEN_WIDTH // 2, SCREEN_HEIGHT - 50)
             self.screen.blit(text, text_rect)
         else:
             text, text_rect = text_utils.get_message("Press any key to Restart", 30, WHITE)
@@ -96,3 +141,22 @@ class Game:
         self.enemy_handler.reset()
         self.bullet_hundler.reset()
         self.score = 0
+        self.high_score = self.load_high_score()  # Cargar el puntaje más alto almacenado
+
+    def draw_high_score(self):
+        high_score_text, high_score_rect = text_utils.get_message("High Score: " + str(self.high_score), 30, WHITE, SCREEN_WIDTH // 2, 200)
+        self.screen.blit(high_score_text, high_score_rect)
+
+    def load_high_score(self):
+        try:
+            with open("high_score.pkl", "rb") as file:
+                high_score = pickle.load(file)
+        except FileNotFoundError:
+            high_score = 0
+        return high_score
+
+    def update_high_score(self):
+        if self.score > self.high_score:
+            self.high_score = self.score
+            with open("high_score.pkl", "wb") as file:
+                pickle.dump(self.high_score, file)

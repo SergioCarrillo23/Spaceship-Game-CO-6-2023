@@ -1,5 +1,6 @@
 from game.components.enemies.ship import Ship
 from game.components.enemies.navy import Navy
+from game.components.enemies.ovni import Ovni
 
 class EnemyHandler:
     def __init__(self):
@@ -20,11 +21,12 @@ class EnemyHandler:
             enemy.draw(screen)
 
     def add_enemy(self):
-        if len(self.enemies) < 2:
+        if len(self.enemies) < 5:
             self.enemies.append(Ship())
-
-        if len(self.enemies) < 4:
+        if len(self.enemies) < 10:
             self.enemies.append(Navy())
+        if len(self.enemies) < 15:
+             self.enemies.append(Ovni())
 
     def remove_enemy(self, enemy):
         self.enemies.remove(enemy)
