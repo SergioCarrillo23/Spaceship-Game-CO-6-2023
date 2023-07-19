@@ -5,6 +5,7 @@ from game.components.spaceship import Spaceship
 from game.components.enemies.enemy_handler import EnemyHandler
 from game.components.bullets.bullet_handler import BulletHandler
 
+
 class Game:
     def __init__(self):
         pygame.init()
@@ -37,11 +38,11 @@ class Game:
 
     def update(self):
         user_input = pygame.key.get_pressed()
-        self.player.update(self.game_speed, user_input)
+        self.player.update(self.game_speed, user_input, self.bullet_hundler)
         self.enemy_handler.update(self.bullet_hundler)
-        self.bullet_hundler.update(self.player)
+        self.bullet_hundler.update(self.player, self.enemy_handler.enemies)
         if not self.player.is_alive:
-            pygame.tiem.delay(300)
+            pygame.time.delay(300)
             self.playing = False
 
     def draw(self):
