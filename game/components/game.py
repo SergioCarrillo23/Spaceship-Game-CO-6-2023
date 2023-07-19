@@ -1,7 +1,7 @@
 import pygame
 import pickle
 
-from game.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, WHITE, BG_IMAGE, BG_IMAGE2, GAME #BG_IMAGE3
+from game.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, WHITE, BG_IMAGE, BG_IMAGE2, GAME, BG_IMAGE3
 from game.components.spaceship import Spaceship
 from game.components.enemies.enemy_handler import EnemyHandler
 from game.components.bullets.bullet_handler import BulletHandler
@@ -60,7 +60,6 @@ class Game:
     def draw(self):
         self.draw_background()
         if self.playing:
-            ##self.draw_background_meteoro()
             self.draw_planet()
             self.draw_satur()
             self.clock.tick(FPS)
@@ -69,6 +68,7 @@ class Game:
             self.bullet_hundler.draw(self.screen)
             self.draw_score()
         else:
+            self.draw_background_meteoro()
             self.draw_title()
             self.draw_menu()
             self.draw_high_score()
@@ -94,7 +94,7 @@ class Game:
             self.y_pos_bg = 0
         elif self.y_pos_bg < 0:
             self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg + image_height))
-            self.y_pos_bg += self.game_speed 
+            self.y_pos_bg += self.game_speed  
 
     def draw_background(self):
         image = pygame.transform.scale(BG, (SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -106,15 +106,16 @@ class Game:
             self.y_pos_bg = 0
         self.y_pos_bg += self.game_speed
 
-    #def draw_background_meteoro(self):
-    #    image = pygame.transform.scale(BG_IMAGE3, (SCREEN_WIDTH, SCREEN_HEIGHT))
-    #    image_height = image.get_height()
-    #    self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg))
-    #    self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg - image_height))
-    #    if self.y_pos_bg >= SCREEN_HEIGHT:
-    #        self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg - image_height))
-    #        self.y_pos_bg = 0
-    #    self.y_pos_bg += self.game_speed
+    def draw_background_meteoro(self):
+        if self.number_deaths == 0:
+            image = pygame.transform.scale(BG_IMAGE3, (SCREEN_WIDTH, SCREEN_HEIGHT))
+            image_height = image.get_height()
+            self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg))
+            self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg - image_height))
+            if self.y_pos_bg >= SCREEN_HEIGHT:
+                self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg - image_height))
+                self.y_pos_bg = 0
+            self.y_pos_bg += (self.game_speed - 13)
 
     def game_over(self):
         if self.number_deaths > 0:
@@ -125,7 +126,7 @@ class Game:
             if self.y_pos_bg >= SCREEN_HEIGHT:
                 self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg - image_height))
                 self.y_pos_bg = 0
-            self.y_pos_bg += self.game_speed
+            self.y_pos_bg += (self.game_speed - 15)
 
     def draw_title(self):
         if self.number_deaths == 0:
@@ -158,13 +159,6 @@ class Game:
         score, score_rect = text_utils.get_message(f'Your score is: {self.score}', 20, WHITE, 1000, 40)
         self.screen.blit(score, score_rect)
 
-    def reset(self):
-        self.player.reset()
-        self.enemy_handler.reset()
-        self.bullet_hundler.reset()
-        self.score = 0
-        self.high_score = self.load_high_score()  # Cargar el puntaje más alto almacenado
-
     def draw_high_score(self):
         if self.number_deaths > 0:
             high_score_text, high_score_rect = text_utils.get_message("High Score: " + str(self.high_score), 30, WHITE, SCREEN_WIDTH // 2, 200)
@@ -183,4 +177,11 @@ class Game:
             self.high_score = self.score
             with open("high_score.pkl", "wb") as file:
                 pickle.dump(self.high_score, file)
+
+    def reset(self):
+        self.player.reset()
+        self.enemy_handler.reset()
+        self.bullet_hundler.reset()
+        self.score = 0
+        self.high_score = self.load_high_score()  # Cargar el puntaje más alto almacenado
 

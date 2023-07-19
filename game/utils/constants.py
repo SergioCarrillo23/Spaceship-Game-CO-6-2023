@@ -19,7 +19,7 @@ BG_IMAGE = pygame.image.load(os.path.join(IMG_DIR, 'Other/jupiter.png'))
 
 BG_IMAGE2 = pygame.image.load(os.path.join(IMG_DIR, 'Other/saturnff.png'))
 
-BG_IMAGE3 = pygame.image.load(os.path.join(IMG_DIR, "Other/lluvimeteoro.png"))
+BG_IMAGE3 = pygame.image.load(os.path.join(IMG_DIR, "Other/lluvimeteoro2.png"))
 
 HEART = pygame.image.load(os.path.join(IMG_DIR, 'Other/SmallHeart.png'))
 
