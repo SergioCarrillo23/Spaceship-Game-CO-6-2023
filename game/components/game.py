@@ -1,7 +1,7 @@
 import pygame
 import pickle
 
-from game.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, WHITE, BG_IMAGE, BG_IMAGE2
+from game.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, WHITE, BG_IMAGE, BG_IMAGE2, GAME #BG_IMAGE3
 from game.components.spaceship import Spaceship
 from game.components.enemies.enemy_handler import EnemyHandler
 from game.components.bullets.bullet_handler import BulletHandler
@@ -60,6 +60,7 @@ class Game:
     def draw(self):
         self.draw_background()
         if self.playing:
+            ##self.draw_background_meteoro()
             self.draw_planet()
             self.draw_satur()
             self.clock.tick(FPS)
@@ -70,8 +71,8 @@ class Game:
         else:
             self.draw_title()
             self.draw_menu()
-            if not self.playing:  # Agregar condición para mostrar el high score solo cuando el juego haya terminado
-                self.draw_high_score()
+            self.draw_high_score()
+            self.game_over()
         pygame.display.update()
         pygame.display.flip()
     
@@ -104,6 +105,27 @@ class Game:
             self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg - image_height))
             self.y_pos_bg = 0
         self.y_pos_bg += self.game_speed
+
+    #def draw_background_meteoro(self):
+    #    image = pygame.transform.scale(BG_IMAGE3, (SCREEN_WIDTH, SCREEN_HEIGHT))
+    #    image_height = image.get_height()
+    #    self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg))
+    #    self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg - image_height))
+    #    if self.y_pos_bg >= SCREEN_HEIGHT:
+    #        self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg - image_height))
+    #        self.y_pos_bg = 0
+    #    self.y_pos_bg += self.game_speed
+
+    def game_over(self):
+        if self.number_deaths > 0:
+            image = pygame.transform.scale(GAME, (SCREEN_WIDTH, SCREEN_HEIGHT-500))
+            image_height = image.get_height()
+            self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg))
+            self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg - image_height))
+            if self.y_pos_bg >= SCREEN_HEIGHT:
+                self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg - image_height))
+                self.y_pos_bg = 0
+            self.y_pos_bg += self.game_speed
 
     def draw_title(self):
         if self.number_deaths == 0:
@@ -144,8 +166,9 @@ class Game:
         self.high_score = self.load_high_score()  # Cargar el puntaje más alto almacenado
 
     def draw_high_score(self):
-        high_score_text, high_score_rect = text_utils.get_message("High Score: " + str(self.high_score), 30, WHITE, SCREEN_WIDTH // 2, 200)
-        self.screen.blit(high_score_text, high_score_rect)
+        if self.number_deaths > 0:
+            high_score_text, high_score_rect = text_utils.get_message("High Score: " + str(self.high_score), 30, WHITE, SCREEN_WIDTH // 2, 200)
+            self.screen.blit(high_score_text, high_score_rect)
 
     def load_high_score(self):
         try:
@@ -160,3 +183,4 @@ class Game:
             self.high_score = self.score
             with open("high_score.pkl", "wb") as file:
                 pickle.dump(self.high_score, file)
+
