@@ -1,8 +1,9 @@
 from game.components.power_ups.shield import Shield
+from game.components.power_ups.shoot_big import Shootbig 
 
 class PowerUpHandler:
-    INTERVAL_TIME = 150
-
+    INTERVAL_TIME = 100
+    
     def __init__(self):
         self.power_ups = []
         self.interval_time = 0 
@@ -24,6 +25,7 @@ class PowerUpHandler:
 
     def add_power_up(self):
         self.power_ups.append(Shield())
+        self.power_ups.append(Shootbig())
 
     def remove_power_up(self, power_up):
         self.power_ups.remove(power_up)

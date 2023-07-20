@@ -8,6 +8,8 @@ class Bullet:
 
     def update(self, object):
         if self.rect.colliderect(object.rect):
+            object.LIFES -= 1
+        
             object.is_alive = False
             self.is_alive = False
 

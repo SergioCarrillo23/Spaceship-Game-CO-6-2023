@@ -8,6 +8,7 @@ class Astro(Enemy):
     HEIGHT = 240
     SPEED_X = 20
     SPEED_Y = 0    
+    LIFES = 5
 
     def __init__(self):
         self.image = ENEMY_4

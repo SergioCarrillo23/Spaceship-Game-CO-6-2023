@@ -8,7 +8,7 @@ class Ovni(Enemy):
     HEIGHT = 240
     SPEED_X = 25
     SPEED_Y = 4  
-
+    LIFES = 3
     
 
     def __init__(self):

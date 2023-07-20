@@ -8,6 +8,7 @@ class Enemy:
     MOV_X = [LEFT, RIGHT]
     INTERVAL = 100
     SHOOTING_TIME = 30
+    LIFES = 4
 
     def __init__(self, image):
         self.image = image 
@@ -19,6 +20,7 @@ class Enemy:
         self.shooting_time = 0 
         self.is_visible = True
         self.is_alive = True
+        self.lifes = self.LIFES
 
     def update(self, bullet_handler):
         self.index += 1
@@ -27,7 +29,8 @@ class Enemy:
         self.shoot(bullet_handler)
         if self.rect.y >= SCREEN_HEIGHT:
             self.is_visible = False
-        
+        if self.lifes == 0:
+            self.is_alive = False
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)

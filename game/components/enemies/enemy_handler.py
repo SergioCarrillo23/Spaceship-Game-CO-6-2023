@@ -22,14 +22,20 @@ class EnemyHandler:
             enemy.draw(screen)
 
     def add_enemy(self):
-        if len(self.enemies) < 3:
-           self.enemies.append(Ship())
         if len(self.enemies) < 5:
-            self.enemies.append(Navy())
-        if len(self.enemies) < 8:
-            self.enemies.append(Ovni())
-        if len(self.enemies) < 11:
-            self.enemies.append(Astro())
+           self.enemies.append(Ship())
+        
+        if len(self.enemies) < 10:
+            if self.enemies_destroyed >= 12 < 30:
+               self.enemies.append(Navy())
+
+        if len(self.enemies) < 15:
+            if self.enemies_destroyed >= 20 < 30:
+                self.enemies.append(Ovni())
+        
+        if len(self.enemies) < 25:
+            if self.enemies_destroyed >= 30:
+                self.enemies.append(Astro())
 
     def remove_enemy(self, enemy):
         self.enemies.remove(enemy)

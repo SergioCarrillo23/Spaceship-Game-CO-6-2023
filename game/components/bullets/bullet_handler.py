@@ -1,6 +1,7 @@
-from game.utils.constants import BULLET_ENEMY_TYPE, BULLET_SHIP
+from game.utils.constants import BULLET_ENEMY_TYPE, BULLET_SHIP, HEART
 from game.components.bullets.ballet_enemy import BulletEnemy
 from game.components.bullets.ballet_ship import BulletShip
+from game.components.bullets.bullet_power_up import BulletPower
 
 
 class BulletHandler:
@@ -12,7 +13,7 @@ class BulletHandler:
         for bullet in self.bullets:
             if type(bullet) == BulletEnemy:
                 bullet.update(player)
-            elif type(bullet) == BulletShip:
+            elif type(bullet) == BulletShip or BulletPower:
                 for enemy in enemies:
                     bullet.update(enemy)
             if not bullet.is_alive or not bullet.is_visible:
@@ -28,6 +29,9 @@ class BulletHandler:
 
         if type == BULLET_SHIP:
             self.bullets.append(BulletShip(center))
+
+        if type == HEART:
+            self.bullets.append(BulletPower(center))
 
 
 # se agrega las balas que se necesitan

@@ -1,6 +1,7 @@
 import pygame
-from game.utils.constants import SPACESHIP, SCREEN_WIDTH, SCREEN_HEIGHT, BULLET_SHIP, SPACESHIP_SHIELD  
+from game.utils.constants import SPACESHIP, SCREEN_WIDTH, SCREEN_HEIGHT, BULLET_SHIP, SPACESHIP_SHIELD, SHIELD_HEART, BULLET, HEART
 from game.components.power_ups.shield import Shield
+from game.components.power_ups.shoot_big import Shootbig
 
 class Spaceship:
     WIDTH = 40
@@ -114,7 +115,7 @@ class Spaceship:
         #    self.rect.top = SCREEN_HEIGHT // 2
 
     def shoot(self, bullet_handler):
-        bullet_handler.add_bullet(BULLET_SHIP, self.rect.center)
+            bullet_handler.add_bullet(BULLET_SHIP, self.rect.center)
 
     def activate_power_up(self, power_up):
         self.time_up = power_up.time_up
@@ -122,6 +123,12 @@ class Spaceship:
             self.image = SPACESHIP_SHIELD
             self.image = pygame.transform.scale(self.image,(self.WIDTH, self.HEIGHT))
             self.has_shield = True
+       
+    def activate_power_shoot(self, power_up, bullet_handler):
+        self.time_up = power_up.time_up
+        if type(power_up) == Shootbig:
+            # Agregar la nueva bala al bullet_handler
+            bullet_handler.add_bullet(HEART, self.rect.center)
 
     def deactivate_powert_up(self):
         self.has_shield = False
