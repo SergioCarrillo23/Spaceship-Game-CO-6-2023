@@ -5,6 +5,7 @@ from game.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, F
 from game.components.spaceship import Spaceship
 from game.components.enemies.enemy_handler import EnemyHandler
 from game.components.bullets.bullet_handler import BulletHandler
+from game.components.power_ups.power_up_handler import PowerUpHandler
 from game.utils import text_utils
 
 class Game:
@@ -22,6 +23,7 @@ class Game:
         self.player = Spaceship()
         self.enemy_handler = EnemyHandler()
         self.bullet_hundler = BulletHandler()
+        self.power_up_handler = PowerUpHandler()
         self.score = 0
         self.number_deaths = 0
         self.high_score = self.load_high_score() # Cargar el puntaje más alto almacenado
@@ -50,6 +52,7 @@ class Game:
             self.player.update(self.game_speed, user_input, self.bullet_hundler)
             self.enemy_handler.update(self.bullet_hundler)
             self.bullet_hundler.update(self.player, self.enemy_handler.enemies)
+            self.power_up_handler.update(self.player)
             self.score = self.enemy_handler.enemies_destroyed
             if not self.player.is_alive:
                 pygame.time.delay(300)
@@ -66,6 +69,7 @@ class Game:
             self.player.draw(self.screen)
             self.enemy_handler.draw(self.screen)
             self.bullet_hundler.draw(self.screen)
+            self.power_up_handler.draw(self.screen)
             self.draw_score()
         else:
             self.draw_background_meteoro()
@@ -184,4 +188,4 @@ class Game:
         self.bullet_hundler.reset()
         self.score = 0
         self.high_score = self.load_high_score()  # Cargar el puntaje más alto almacenado
-
+        self.power_up_handler.reset()
